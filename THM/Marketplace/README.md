@@ -38,6 +38,7 @@ Connection: close
 ```
 
 Taking a look at the web page we land here
+
 ![image1.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image1.png)
 
 It's a marketplace website hence the challenge name. I also looked at the other port 32768 and they are serving the same content 
@@ -60,6 +61,7 @@ Here is the sign up page. I tried doing some basic SQLi test but none did not wo
 The login page is identical but just logging in. I also tried so SQLi test here but nothing worked so I moved on.
 
 When I logged I took a look at my cookies and saw I had a login token I took note of that
+
 ![image4.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image4.png)
 
 Since we are logged in we can now make new listings on the marketplace website
@@ -92,6 +94,7 @@ python -m http.server
 ```
 
 I submitted the item and knew my payload have worked because when I visit the page I get the following
+
 ![image9.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image9.png)
 
 And I got a request to my listening web server
@@ -113,6 +116,7 @@ Going in there you will find your first flag! You will also find all the user ac
 ![image11.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image11.png)
 
 If you click one of the boxes it will give you details of that user on a different page
+
 ![image12.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image12.png)
 
 I took a look at the URL and saw there was a parameter
@@ -123,12 +127,12 @@ I knew it had to be doing some sort of SQL query to fetch the user. So I tried d
 ![image13.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image13.png)
 
 Perfect we can do some SQLi here. Since we know the page displays output from the query we can do a UNION based attack. With some testing this payload satisifes the query without producing any errors
-http://10.10.138.5/admin?user=1000%20UNION%20SELECT%201,2,3,4;
+`user=1000%20UNION%20SELECT%201,2,3,4;`
 
 Time to enumerate some tables
 
 This following payload leaks all database names
-http://10.10.138.5/admin?user=1000%20UNION%20SELECT%20group_concat(schema_name),2,3,4%20FROM%20information_schema.schemata%20;
+`user=1000%20UNION%20SELECT%20group_concat(schema_name),2,3,4%20FROM%20information_schema.schemata%20;`
 
 ![image14.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image14.png)
 
